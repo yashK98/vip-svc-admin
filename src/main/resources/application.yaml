@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/vip_admin?currentSchema=keycloak
+    username: postgres
+    password: postgres
+  application:
+    name: vip-svc-admin
+
+server:
+  port: 8001
+  servlet.context-path: /vip
+
+keycloak:
+  url: http://localhost:5000/
+  realm: vip-admin
+  client_id: vip-iam-admin
+  secret: U9roKNTguBcWKxaduIUcI1o2BcMVQ2UU
+
+openfga:
+  url: http://127.0.0.1:8080
+  store-id: 01KEPJ929TWH293E48FTCS3JDP

@@ -1,14 +1,8 @@
 package org.vip.admin.model.fga;
 
+import lombok.Data;
+
+@Data
 public class FgaRequest {
-
     private UserTuple writes;
-
-    public UserTuple getWrites() {
-        return writes;
-    }
-
-    public void setWrites(UserTuple writes) {
-        this.writes = writes;
-    }
 }

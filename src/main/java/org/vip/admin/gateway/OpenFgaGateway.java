@@ -1,30 +1,30 @@
-package org.vip.admin.service;
+package org.vip.admin.gateway;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.vip.admin.model.fga.FgaRequest;
 
-@Service
-public class OpenFgaService {
+@Component
+public class OpenFgaGateway {
 
     private final RestClient client;
 
     @Value("${openfga.store-id}")
     private String storeId;
 
-    public OpenFgaService(@Qualifier("openfga") RestClient client) {
+    public OpenFgaGateway(@Qualifier("openfga") RestClient client) {
         this.client = client;
     }
 
     public void writeTuples(FgaRequest request) {
         client.post()
-              .uri("/stores/{storeId}/write", storeId)
-              .contentType(MediaType.APPLICATION_JSON)
-              .body(request)
-              .retrieve()
-              .toBodilessEntity();
+                .uri("/stores/{storeId}/write", storeId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(request)
+                .retrieve()
+                .toBodilessEntity();
     }
 }

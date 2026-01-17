@@ -49,6 +49,26 @@ public class KeycloakGateway {
                 .toBodilessEntity();
     }
 
+    public void createClient(String realm, String clientId) {
+        // Define the client configuration in JSON format
+        String jsonBody = """
+        {
+            "clientId": "%s",
+            "enabled": true,
+            "protocol": "openid-connect",
+            "publicClient": false,
+            "redirectUris": []
+        }
+        """.formatted(clientId);
+        client.post()
+                .uri("/admin/realms/{realm}/clients", realm)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AUTHORIZATION, BEARER + this.getToken())
+                .body(jsonBody)
+                .retrieve()
+                .toBodilessEntity();
+    }
+
     public void createUser(KeycloakUser user, String realm){
         client.post()
                 .uri("/admin/realms/{realm}/users", realm)

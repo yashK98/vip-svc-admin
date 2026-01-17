@@ -12,7 +12,7 @@
 	<artifactId>vip-svc-admin</artifactId>
 	<version>1.0.0</version>
 	<name>admin</name>
-	<description>VIP Admin Service Layer :: Integrates to Keycloak and OpenFGA</description>
+	<description>VIP Admin Service Layer :: Integration with Keycloak and OpenFGA</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -22,19 +22,10 @@
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
 			<groupId>dev.openfga</groupId>
 			<artifactId>openfga-sdk</artifactId>
 			<version>0.9.4</version>
 			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -47,9 +38,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
-			<scope>test</scope>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.20.1</version>
 		</dependency>
 	</dependencies>
 

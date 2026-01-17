@@ -1,10 +1,9 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5433/vip_admin?currentSchema=keycloak
-    username: postgres
-    password: postgres
   application:
     name: vip-svc-admin
+  servlet:
+    multipart:
+      file-size-threshold: 2MB
 
 server:
   port: 8001

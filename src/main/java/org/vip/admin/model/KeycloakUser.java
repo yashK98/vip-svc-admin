@@ -2,7 +2,6 @@ package org.vip.admin.model;
 
 import lombok.Data;
 
-import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -16,8 +15,6 @@ public class KeycloakUser {
 
     @Data
     public static class Attributes {
-        private List<String> tenantId;
         private List<String> userRole;
-        private List<String> status = Collections.singletonList("active");
     }
 }

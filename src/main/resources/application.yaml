@@ -12,10 +12,8 @@ server:
 
 keycloak:
   url: http://localhost:5000/
-  realm: acme
-  client_id: acme-svc-admin
-  secret: z14ludmSbdLv3bFsFFJjTdRBxLTQFoW9
+  client_id: vip-svc-admin
+  secret: fck07p0G1mtYrWjZwyhftYNFRk1BBJqj
 
 openfga:
-  url: http://127.0.0.1:8080
-  store-id: 01KF0PNQ57NS1TTHAXG6ACJTD9
+  api-url: http://127.0.0.1:8080

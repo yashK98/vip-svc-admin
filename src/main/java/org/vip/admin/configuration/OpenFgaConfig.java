@@ -1,22 +1,22 @@
 package org.vip.admin.configuration;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import dev.openfga.sdk.api.client.OpenFgaClient;
+import dev.openfga.sdk.api.configuration.ClientConfiguration;
+import dev.openfga.sdk.errors.FgaInvalidParameterException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestClient;
 
 @Configuration
 public class OpenFgaConfig {
 
-    @Value("${openfga.url}")
-    private String openfgaBaseUrl;
+    @Value("${openfga.api-url}")
+    private String apiUrl;
 
     @Bean
-    @Qualifier("openfga")
-    public RestClient openFgaClient() {
-        return RestClient.builder()
-                .baseUrl(openfgaBaseUrl)
-                .build();
+    public OpenFgaClient openFgaClient() throws FgaInvalidParameterException {
+        ClientConfiguration config = new ClientConfiguration()
+                .apiUrl(apiUrl);
+        return new OpenFgaClient(config);
     }
 }

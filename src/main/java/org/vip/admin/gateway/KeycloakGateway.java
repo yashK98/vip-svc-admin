@@ -77,4 +77,12 @@ public class KeycloakGateway {
                 .retrieve()
                 .toBodilessEntity();
     }
+
+    public JsonNode getUser(String username, String appName){
+        return client.get()
+                .uri("/admin/realms/{realm}/users?username={username}", appName, username)
+                .header(AUTHORIZATION, BEARER + this.getToken())
+                .retrieve()
+                .body(JsonNode.class);
+    }
 }

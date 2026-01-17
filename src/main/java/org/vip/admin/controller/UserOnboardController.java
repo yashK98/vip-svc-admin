@@ -1,13 +1,14 @@
 package org.vip.admin.controller;
 
+import org.vip.admin.model.fga.UserDetailsResponse;
+import tools.jackson.databind.JsonNode;
 import dev.openfga.sdk.errors.FgaInvalidParameterException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.vip.admin.model.KeycloakUser;
 import org.vip.admin.service.UserService;
+
+import java.util.concurrent.ExecutionException;
 
 @RestController
 public class UserOnboardController {
@@ -24,5 +25,10 @@ public class UserOnboardController {
     private String createUsers(@RequestBody KeycloakUser user, @RequestParam("appName") String appName) throws FgaInvalidParameterException {
         userService.createUsers(user, appName);
         return "User Added to Keycloak and OpenFGA";
+    }
+
+    @GetMapping("/getUser")
+    private UserDetailsResponse getUser(@RequestParam("username") String username, @RequestParam("appName") String appName) throws FgaInvalidParameterException, ExecutionException, InterruptedException {
+        return userService.getUserDetails(username, appName).get();
     }
 }

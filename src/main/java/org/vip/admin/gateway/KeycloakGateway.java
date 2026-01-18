@@ -49,17 +49,76 @@ public class KeycloakGateway {
                 .toBodilessEntity();
     }
 
-    public void createClient(String realm, String clientId) {
+    public void createClient(String realm,String appurl) {
         // Define the client configuration in JSON format
         String jsonBody = """
-        {
-            "clientId": "%s",
-            "enabled": true,
-            "protocol": "openid-connect",
-            "publicClient": false,
-            "redirectUris": []
-        }
-        """.formatted(clientId);
+                {
+                   "clientId": "web-ui-client",
+                   "name": "",
+                   "description": "",
+                   "rootUrl": "",
+                   "adminUrl": "",
+                   "baseUrl": "",
+                   "surrogateAuthRequired": false,
+                   "enabled": true,
+                   "alwaysDisplayInConsole": false,
+                   "clientAuthenticatorType": "none",
+                   "redirectUris": ["http://localhost:5173/*"],
+                   "webOrigins": ["http://localhost:5173"],
+                   "notBefore": 0,
+                   "bearerOnly": false,
+                   "consentRequired": false,
+                   "standardFlowEnabled": true,
+                   "implicitFlowEnabled": false,
+                   "directAccessGrantsEnabled": true,
+                   "serviceAccountsEnabled": false,
+                   "publicClient": true,
+                   "frontchannelLogout": false,
+                   "protocol": "openid-connect",
+                   "attributes": {
+                     "logout.confirmation.enabled": "false",
+                     "realm_client": "false",
+                     "oidc.ciba.grant.enabled": "false",
+                     "client.secret.creation.time": "1768654867",
+                     "backchannel.logout.session.required": "true",
+                     "standard.token.exchange.enabled": "false",
+                     "oauth2.device.authorization.grant.enabled": "false",
+                     "display.on.consent.screen": "false",
+                     "use.jwks.url": "false",
+                     "pkce.code.challenge.method": "S256",
+                     "backchannel.logout.revoke.offline.tokens": "false",
+                     "dpop.bound.access.tokens": "false",
+                     "login_theme": "",
+                     "consent.screen.text": "",
+                     "backchannel.logout.url": "",
+                     "post.logout.redirect.uris": "http://localhost:5173/*"
+                   },
+                   "authenticationFlowBindingOverrides": {},
+                   "fullScopeAllowed": true,
+                   "nodeReRegistrationTimeout": -1,
+                   "defaultClientScopes": [
+                     "web-origins",
+                     "acr",
+                     "roles",
+                     "profile",
+                     "basic",
+                     "email"
+                   ],
+                   "optionalClientScopes": [
+                     "address",
+                     "phone",
+                     "organization",
+                     "offline_access",
+                     "microprofile-jwt"
+                   ],
+                   "access": {
+                     "view": true,
+                     "configure": true,
+                     "manage": true
+                   },
+                   "authorizationServicesEnabled": false
+                }
+                """;
         client.post()
                 .uri("/admin/realms/{realm}/clients", realm)
                 .contentType(MediaType.APPLICATION_JSON)

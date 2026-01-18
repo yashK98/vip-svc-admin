@@ -1,4 +1,8 @@
 spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/vip_admin?currentSchema=vip_tenant
+    username: postgres
+    password: postgres
   application:
     name: vip-svc-admin
   servlet:

@@ -1,16 +1,16 @@
 package org.vip.admin.controller;
 
-import org.vip.admin.model.fga.UserDetailsResponse;
-import tools.jackson.databind.JsonNode;
 import dev.openfga.sdk.errors.FgaInvalidParameterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.vip.admin.model.KeycloakUser;
+import org.vip.admin.model.fga.UserDetailsResponse;
 import org.vip.admin.service.UserService;
 
 import java.util.concurrent.ExecutionException;
 
 @RestController
+@CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET})
 public class UserOnboardController {
 
     @Autowired

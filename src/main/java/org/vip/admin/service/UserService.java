@@ -39,6 +39,7 @@ public class UserService {
     public void createUsers(KeycloakUser user, String appName) throws FgaInvalidParameterException {
         log.info("User Request :: {}, App Name :: {}", user, appName);
         keycloakGateway.createUser(user, appName);
+        /*
         findStoreIdByName(appName).thenAccept(storeId -> {
             log.info("For the AppName :: {}, storeId :: {}", appName, storeId.get());
             try {
@@ -53,6 +54,7 @@ public class UserService {
            log.info("Error occured while searching for AppName :: {}, Exception :: {}", appName, ex);
            return null;
         });
+        */
     }
 
     public CompletableFuture<Optional<String>> findStoreIdByName(String appName) throws FgaInvalidParameterException {

@@ -16,6 +16,8 @@ import org.vip.admin.gateway.KeycloakGateway;
 import org.vip.admin.model.RealmRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.vip.admin.model.onboard.AppOnboardRequest;
+import org.vip.admin.model.onboard.Tenant;
+import org.vip.admin.repo.TenantRepo;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -29,10 +31,26 @@ public class AppOnboardService {
     @Autowired
     private OpenFgaClient openFgaClient;
 
+    @Autowired
+    private TenantRepo tenantRepo;
+
     @Value("${openfga.api-url}")
     private String openFgaUrl;
 
     private final ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
+
+    public void tenantOnboard(Tenant appOnboardRequest) throws FgaInvalidParameterException {
+        log.info("Onboarding Request :: {}", appOnboardRequest);
+        keycloakGateway.createRealm(this.getRealmRequest(appOnboardRequest.getName()));
+        keycloakGateway.createClient(appOnboardRequest.getName(), appOnboardRequest.getApplicationUrl());
+        createNewStore(appOnboardRequest.getName()).thenAccept(storeId -> {
+            log.info("Successfully created OpenFGA store for app: {} with ID: {}", appOnboardRequest.getName(), storeId);
+        }).exceptionally(ex -> {
+            log.error("Failed to create OpenFGA store for app: {}", appOnboardRequest.getName(), ex);
+            return null;
+        });
+        tenantRepo.save(appOnboardRequest);
+    }
 
     public void appOnboard(AppOnboardRequest appOnboardRequest, MultipartFile file) throws FgaInvalidParameterException {
         keycloakGateway.createRealm(this.getRealmRequest(appOnboardRequest.getId()));

@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.vip.admin.model.onboard.AppOnboardRequest;
+import org.vip.admin.model.onboard.Tenant;
 import org.vip.admin.service.AppOnboardService;
 
 @Slf4j
@@ -20,6 +21,12 @@ public class AppOnboardController {
     @PostMapping(value = "/appOnboard", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String createRealm(@RequestPart("appOnboardRequest") AppOnboardRequest appOnboardRequest, @RequestPart(value = "file", required = false) MultipartFile file) throws FgaInvalidParameterException {
         appOnboardService.appOnboard(appOnboardRequest, file);
+        return "Application Onboarded to Keycloak and OpenFGA";
+    }
+
+    @PostMapping(value = "/tenantOnboard")
+    public String tenantOnboard(@RequestBody Tenant appOnboardRequest) throws FgaInvalidParameterException {
+        appOnboardService.tenantOnboard(appOnboardRequest);
         return "Application Onboarded to Keycloak and OpenFGA";
     }
 

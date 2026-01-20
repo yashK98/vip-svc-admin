@@ -13,12 +13,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.vip.admin.gateway.KeycloakGateway;
+import org.vip.admin.model.KeycloakUser;
 import org.vip.admin.model.RealmRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.vip.admin.model.onboard.AppOnboardRequest;
 import org.vip.admin.model.onboard.Tenant;
 import org.vip.admin.repo.TenantRepo;
 
+import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
@@ -42,7 +44,9 @@ public class AppOnboardService {
     public void tenantOnboard(Tenant appOnboardRequest) throws FgaInvalidParameterException {
         log.info("Onboarding Request :: {}", appOnboardRequest);
         keycloakGateway.createRealm(this.getRealmRequest(appOnboardRequest.getName()));
+        keycloakGateway.createGroup(appOnboardRequest.getName());
         keycloakGateway.createClient(appOnboardRequest.getName(), appOnboardRequest.getApplicationUrl());
+        keycloakGateway.createUser(this.getAdminUser(appOnboardRequest.getName()), appOnboardRequest.getName());
         createNewStore(appOnboardRequest.getName()).thenAccept(storeId -> {
             log.info("Successfully created OpenFGA store for app: {} with ID: {}", appOnboardRequest.getName(), storeId);
         }).exceptionally(ex -> {
@@ -107,5 +111,14 @@ public class AppOnboardService {
                     log.info("Model registered successfully. ID: {}", id);
                     return id;
                 });
+    }
+
+    private KeycloakUser getAdminUser(String realm){
+        KeycloakUser user = new KeycloakUser();
+        user.setFirstName("admin");
+        user.setLastName(realm);
+        user.setUsername("admin");
+        user.setGroups(Collections.singletonList(realm+"_INTERNAL"));
+        return user;
     }
 }

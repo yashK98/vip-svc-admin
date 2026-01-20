@@ -12,6 +12,7 @@ public class KeycloakUser {
     private String email;
     private boolean enabled=true;
     private Attributes attributes;
+    private List<String> groups;
 
     @Data
     public static class Attributes {

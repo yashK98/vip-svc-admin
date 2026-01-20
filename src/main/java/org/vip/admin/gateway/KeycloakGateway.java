@@ -49,78 +49,46 @@ public class KeycloakGateway {
                 .toBodilessEntity();
     }
 
-    public void createClient(String realm,String appurl) {
-        // Define the client configuration in JSON format
+    public void createClient(String realm,String appUrl) {
+        // 1. Sanitize appUrl to remove trailing slash for consistency if needed
+        String baseAppUrl = appUrl.endsWith("/") ? appUrl.substring(0, appUrl.length() - 1) : appUrl;
+
+        // 2. Use %s placeholders for dynamic values
         String jsonBody = """
-                {
-                   "clientId": "web-ui-client",
-                   "name": "",
-                   "description": "",
-                   "rootUrl": "",
-                   "adminUrl": "",
-                   "baseUrl": "",
-                   "surrogateAuthRequired": false,
-                   "enabled": true,
-                   "alwaysDisplayInConsole": false,
-                   "clientAuthenticatorType": "none",
-                   "redirectUris": ["http://localhost:5173/*"],
-                   "webOrigins": ["http://localhost:5173"],
-                   "notBefore": 0,
-                   "bearerOnly": false,
-                   "consentRequired": false,
-                   "standardFlowEnabled": true,
-                   "implicitFlowEnabled": false,
-                   "directAccessGrantsEnabled": true,
-                   "serviceAccountsEnabled": false,
-                   "publicClient": true,
-                   "frontchannelLogout": false,
-                   "protocol": "openid-connect",
-                   "attributes": {
-                     "logout.confirmation.enabled": "false",
-                     "realm_client": "false",
-                     "oidc.ciba.grant.enabled": "false",
-                     "client.secret.creation.time": "1768654867",
-                     "backchannel.logout.session.required": "true",
-                     "standard.token.exchange.enabled": "false",
-                     "oauth2.device.authorization.grant.enabled": "false",
-                     "display.on.consent.screen": "false",
-                     "use.jwks.url": "false",
-                     "pkce.code.challenge.method": "S256",
-                     "backchannel.logout.revoke.offline.tokens": "false",
-                     "dpop.bound.access.tokens": "false",
-                     "login_theme": "",
-                     "consent.screen.text": "",
-                     "backchannel.logout.url": "",
-                     "post.logout.redirect.uris": "http://localhost:5173/*"
-                   },
-                   "authenticationFlowBindingOverrides": {},
-                   "fullScopeAllowed": true,
-                   "nodeReRegistrationTimeout": -1,
-                   "defaultClientScopes": [
-                     "web-origins",
-                     "acr",
-                     "roles",
-                     "profile",
-                     "basic",
-                     "email"
-                   ],
-                   "optionalClientScopes": [
-                     "address",
-                     "phone",
-                     "organization",
-                     "offline_access",
-                     "microprofile-jwt"
-                   ],
-                   "access": {
-                     "view": true,
-                     "configure": true,
-                     "manage": true
-                   },
-                   "authorizationServicesEnabled": false
-                }
-                """;
+            {
+               "clientId": "web-ui-client",
+               "enabled": true,
+               "clientAuthenticatorType": "none",
+               "redirectUris": ["%1$s/*"],
+               "webOrigins": ["%1$s"],
+               "standardFlowEnabled": true,
+               "directAccessGrantsEnabled": true,
+               "publicClient": true,
+               "protocol": "openid-connect",
+               "attributes": {
+                 "pkce.code.challenge.method": "S256",
+                 "post.logout.redirect.uris": "%1$s/*"
+               },
+               "defaultClientScopes": ["web-origins", "roles", "profile", "email"]
+            }
+            """.formatted(baseAppUrl);
         client.post()
                 .uri("/admin/realms/{realm}/clients", realm)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AUTHORIZATION, BEARER + this.getToken())
+                .body(jsonBody)
+                .retrieve()
+                .toBodilessEntity();
+    }
+
+    public void createGroup(String realm){
+        String jsonBody = """
+            {
+                "name": "%s"
+            }
+            """.formatted(realm + "_INTERNAL");
+        client.post()
+                .uri("/admin/realms/{realm}/groups", realm)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AUTHORIZATION, BEARER + this.getToken())
                 .body(jsonBody)
